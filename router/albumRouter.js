@@ -7,7 +7,8 @@ router
   .get("/", controller.getAllAlbums)
   .get("/:id", controller.getAlbum)
   .post("/", controller.saveAlbum)
-  .put("/:id", controller.editAlbum)
+  .put("/:id", controller.replace)
+  .patch("/:id", controller.editAlbum)
   .delete("/:id", controller.deleteAlbum);
 
 export default router;

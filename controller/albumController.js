@@ -21,25 +21,33 @@ export const getAlbum = async (req, res) => {
   res.status(200).json(album);
 };
 
-export const editAlbum = async (req, res) => {
-  const album = await collection.findOne({ _id: ObjectId(req.params.id) });
-  if (!album) return res.status(404).send("Not Found");
+// PUT
+export const replace = async (req, res) => {
+  const document = { ...req.body };
 
-  await collection.updateOne(
+  const result = await collection.replaceOne(
+    { _id: ObjectId(req.params.id) },
+    document,
+    { upsert: true }
+  );
+  res.status(204).json(result);
+};
+
+//PATCH
+export const editAlbum = async (req, res) => {
+  const result = await collection.updateOne(
     { _id: ObjectId(req.params.id) },
     { $set: { ...req.body } }
   );
-
-  res.status(202).json("updated");
+  res.status(204).json(result);
 };
 
 export const deleteAlbum = async (req, res) => {
-  const album = await collection.findOne({ _id: ObjectId(req.params.id) });
-  if (!album) return res.status(404).send("Not Found");
+  const result = await collection.deleteOne({ _id: ObjectId(req.params.id) });
 
-  await collection.deleteOne({ _id: ObjectId(req.params.id) });
+  if (result.deletedCount <= 0) return res.status(404).end();
 
-  res.status(202).json(`${req.params.id} deleted`);
+  res.status(204).json(`${req.params.id} deleted`);
 };
 
 export const saveAlbum = async (req, res) => {

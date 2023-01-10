@@ -16,24 +16,32 @@ export const getPhoto = async (req, res) => {
   res.status(200).json(photo);
 };
 
-export const editPhoto = async (req, res) => {
-  const photo = await collection.findOne({ _id: ObjectId(req.params.id) });
-  if (!photo) return res.status(404).send("Not Found");
+// PUT
+export const replace = async (req, res) => {
+  const document = { ...req.body };
 
-  await collection.updateOne(
+  const result = await collection.replaceOne(
+    { _id: ObjectId(req.params.id) },
+    document
+  );
+  res.status(204).json(result);
+};
+
+//PATCH
+export const editPhoto = async (req, res) => {
+  const result = await collection.updateOne(
     { _id: ObjectId(req.params.id) },
     { $set: { ...req.body } }
   );
-  res.status(202).json("updated");
+  res.status(204).json(result);
 };
 
 export const deletePhoto = async (req, res) => {
-  const photo = await collection.findOne({ _id: ObjectId(req.params.id) });
-  if (!photo) return res.status(404).send("Not Found");
+  const result = await collection.deleteOne({ _id: ObjectId(req.params.id) });
 
-  await collection.deleteOne({ _id: ObjectId(req.params.id) });
+  if (result.deletedCount <= 0) return res.status(404).end();
 
-  res.status(202).json(`${req.params.id} deleted`);
+  res.status(204).json(`${req.params.id} deleted`);
 };
 
 export const savePhoto = async (req, res) => {

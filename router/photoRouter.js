@@ -7,7 +7,8 @@ router
   .get("/", controller.getAllPhotos)
   .get("/:id", controller.getPhoto)
   .post("/", controller.savePhoto)
-  .put("/:id", controller.editPhoto)
+  .put("/:id", controller.replace)
+  .patch("/:id", controller.editPhoto)
   .delete("/:id", controller.deletePhoto);
 
 export default router;
